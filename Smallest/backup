@@ -1,0 +1,91 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Smallest {
+	static int lowest_sum = Integer.MAX_VALUE;
+	public static MyLinkedList my_list;
+
+	public static void main(String args[]) {
+
+		my_list = new MyLinkedList();
+
+		Scanner scanner = null;
+		File file = new File("in.txt");
+
+		try {
+			scanner = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			System.out.println("file not found");
+			return;
+		}
+
+		while (scanner.hasNextInt()) {
+
+			my_list.add(scanner.nextInt());
+		}
+
+		System.out.println(Subset_Sum(my_list, my_list.head.next_node, 0));
+
+	}
+
+	public static int Subset_Sum(MyLinkedList list, Node current, int running_sum) {
+
+		// base case
+
+		if (current == null) {
+			return lowest_sum;
+		}
+
+		running_sum += current.value;
+
+		if (Math.abs(running_sum) < lowest_sum) {
+			lowest_sum = Math.abs(running_sum);
+		}
+
+		Subset_Sum(list, current.next_node, running_sum);
+
+		Subset_Sum(list, current.next_node, (running_sum - current.value));
+
+		return lowest_sum;
+	}
+}
+
+class Node {
+
+	Node next_node;
+	int value;
+
+	public Node(int data) {
+		next_node = null;
+		value = data;
+	}
+
+}
+
+class MyLinkedList {
+	Node head;
+
+	public MyLinkedList() {
+
+	}
+
+	public void add(int data) {
+		if (head == null) {
+			head = new Node(data);
+		}
+
+		Node temp = new Node(data);
+		Node current = head;
+
+		if (current != null) {
+
+			while (current.next_node != null) {
+				current = current.next_node;
+			}
+
+			current.next_node = temp;
+		}
+
+	}
+}
